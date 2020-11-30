@@ -21,43 +21,42 @@ public class UserResource {
 
     @POST
     public Response createUser(@QueryParam("name") String name) {
-        if(!userExists(name)) {
+        if (!userExists(name)) {
             users.add(name);
-            return Response.ok().build();
-        }
-        else return Response.status(400, "Týpeček existuje").build();
+            return Response.ok("Týpeček jménem " + name + " byl vytvořen").build();
+        } else return Response.status(400, "Týpeček existuje").build();
     }
-    @Path("users/{name}")
+
+    @Path("/{name}") //localhost:8080/webik/api/users/{name}
     @PUT
     public Response renameUser(@QueryParam("name") String newName, @PathParam("name") String name) {
-        if(userExists(name)){
+        if (userExists(name)) {
             for (int i = 0; i < users.size(); i++) {
                 if (users.get(i).equals(name)) {
                     users.set(i, newName);
-                    return Response.ok("Týpeček " + name + " byl přejmenován na " + newName).build();
+                    return Response.ok("Týpeček jménem " + name + " byl přejmenován na " + newName).build();
                 }
             }
-        }
-        else return Response.status(400, "Týpeček neexistuje").build();
+        } else return Response.status(400, "Týpeček neexistuje").build();
         return Response.status(304, "Nic se nezměnilo").build();
     }
+
     @DELETE
-    public Response deleteUser(String name) {
-        if(userExists(name)) {
-            for(int i=0; i < users.size(); i++) {
-                if(users.get(i).equals(name)) {
+    public Response deleteUser(@QueryParam("name") String name) {
+        if (userExists(name)) {
+            for (int i = 0; i < users.size(); i++) {
+                if (users.get(i).equals(name)) {
                     users.remove(i);
-                    return Response.ok("Týpeček " + name + " byl vymazán z tohoto světa").build();
+                    return Response.ok("Týpeček jménem " + name + " byl vymazán z tohoto světa").build();
                 }
             }
-        }
-        else return Response.status(400, "Týpeček neexistuje").build();
+        } else return Response.status(400, "Týpeček neexistuje").build();
         return Response.status(304, "Nic se nezměnilo").build();
     }
 
     public boolean userExists(String uName) {
-        for(int i=0; i < users.size(); i++) {
-             if(users.get(i).equals(uName)) return true;
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).equals(uName)) return true;
         }
         return false;
     }
